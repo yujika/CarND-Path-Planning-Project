@@ -1,5 +1,21 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
+
+### Reflection on how to generate paths
+Basically this program is implemented as Udacity described in Project Q&A.
+- Path generation is done by changing d value in Frenet coordinates
+- Add 3 waitpoints and make trajectory by using spline curve
+Path planning
+* Implemented very simply ( no use of cost function or FSM )
+* Check lanes safe to go from other vhecle's s and d value
+** A slow car in the lane means not safe ( not efficient )
+*** Check we have enough space between cars by adding space_for_lane_change margine.
+** A fast car approching from behind us means not safe
+** If car need to slow down, check safe lane ( free_lane_(slow|fast) ) if we can change lane
+** If safe lane was available, change d value in Frenet coordinate by changing lane number
+
+
+--- below is Udacity README ---
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).  
