@@ -158,7 +158,8 @@ int main() {
 	  }
 
 	  double target_speed=ref_vel;
-	  bool free_lane[3] = {true,true,true};
+	  bool free_lane_slow[3] = {true,true,true};
+	  bool free_lane_fast[3] = {true,true,true};
 	  for( int i = 0; i < sensor_fusion.size(); i++ ){
 	    double vx = sensor_fusion[i][3];
 	    double vy = sensor_fusion[i][4];
@@ -170,12 +171,13 @@ int main() {
 	    int l = std::round((d-2.0)/4.0);
 	    if ( 0 <= l && l < 3 ){
 	      // lane clouded
-	      if ( check_car_s >= car_s && check_speed < ref_vel ){
-		free_lane[l] = false;
+	      const double space_for_lane_change = 4.0;
+	      if ( check_car_s >= car_s - space_for_lane_change && check_speed < ref_vel ){
+		free_lane_slow[l] = false;
 	      }
 	      // fast car is approaching
 	      if ( check_car_s < car_s && check_speed > ref_vel ){
-		free_lane[l] = false;
+		free_lane_fast[l] = false;
 	      }
 	    }
 	    if ( d < (2+4*lane+2) && d > (2+4*lane-2) ){
@@ -186,11 +188,12 @@ int main() {
 	    }
 	  }
 	  if ( target_speed < ref_vel ){
-	    if ( free_lane[lane] == false ){
+	    //std::cout << free_lane_slow[0] << free_lane_slow[1] << free_lane_slow[2] << free_lane_fast[0] << free_lane_fast[1] << free_lane_fast[2] << std::endl;
+	    if ( free_lane_slow[lane] == false ){
 	      // better to change lane
-	      if ( lane > 0 && free_lane[lane-1] ){
+	      if ( lane > 0 && free_lane_slow[lane-1] && free_lane_fast[lane-1]){
 		lane --;
-	      }else if ( lane < 2 && free_lane[lane+1] ){
+	      }else if ( lane < 2 && free_lane_slow[lane+1] && free_lane_fast[lane+1]){
 		lane ++;
 	      }
 	    }
@@ -201,9 +204,6 @@ int main() {
 	  }else if( ref_vel  < 49.5 ){
 	    ref_vel += .224;
 	  }
-
-	  lane = 0;
-
 
 	  vector<double> ptsx;
 	  vector<double> ptsy;
@@ -239,7 +239,7 @@ int main() {
 	  ptsx.push_back(next_wp2[0]);
 	  ptsy.push_back(next_wp0[1]);
 	  ptsy.push_back(next_wp1[1]);
-	  ptsy.push_back(next_wp1[1]);
+	  ptsy.push_back(next_wp2[1]);
 
 	  for( int i = 0 ; i < ptsx.size() ; i++ ){
 	    double shift_x = ptsx[i]-ref_x;
