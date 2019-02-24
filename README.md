@@ -5,14 +5,14 @@ Self-Driving Car Engineer Nanodegree Program
 Basically this program is implemented as Udacity described in Project Q&A.
 - Path generation is done by changing d value in Frenet coordinates
 - Add 3 waitpoints and make trajectory by using spline curve
-Path planning
+#### Path planning
 * Implemented very simply ( no use of cost function or FSM )
-* Check lanes safe to go from other vhecle's s and d value
-** A slow car in the lane means not safe ( not efficient )
-*** Check we have enough space between cars by adding space_for_lane_change margine.
-** A fast car approching from behind us means not safe
-** If car need to slow down, check safe lane ( free_lane_(slow|fast) ) if we can change lane
-** If safe lane was available, change d value in Frenet coordinate by changing lane number
+* Change lane only when safety check is passed.
+  * A slow car in the lane means not safe ( not efficient )
+    * Check we have enough space between cars by adding space_for_lane_change margine.
+  * A fast car approching from behind us means not safe
+  * If car need to slow down, check safe lane ( free_lane_(slow|fast) )
+  * If safe lane was available, change d value in Frenet coordinate by changing lane number
 
 
 --- below is Udacity README ---
